@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            font-size: 14px;
+        }
+
+        /* Header */
+        .header {
+            background-color: #ff6b35;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .logo::before {
+            content: "🎯";
+            margin-right: 8px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #fff;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23666"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>');
+            background-size: 20px;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Layout Container */
+        .container {
+            display: flex;
+            min-height: calc(100vh - 52px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+            padding: 0;
+        }
+
+        .sidebar-item {
+            padding: 12px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .sidebar-item.active {
+            background-color: #fff2f0;
+            border-left: 3px solid #ff6b35;
+            color: #ff6b35;
+            font-weight: 500;
+        }
+
+        .sidebar-item.sub-menu {
+            padding-left: 40px;
+            font-size: 13px;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar-item.sub-menu.active {
+            background-color: #f0f0f0;
+            border-left: 3px solid #999;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .sidebar-icon {
+            width: 18px;
+            height: 18px;
+            opacity: 0.7;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            background-color: white;
+        }
+
+        .breadcrumb {
+            padding: 20px 25px;
+            font-size: 14px;
+            color: #6c757d;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .breadcrumb a {
+            color: #17a2b8;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb .course-name {
+            color: #ff6b35;
+            font-weight: bold;
+        }
+
+        .breadcrumb .separator {
+            margin: 0 8px;
+        }
+
+        .breadcrumb .course-name {
+            color: #ff6b35;
+            font-weight: bold;
+        }
+
+        .assessment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .assessment-title {
+            font-size: 28px;
+            font-weight: 400;
+            color: #212529;
+        }
+
+        .assessment-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-submit {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-submit:hover {
+            background-color: #218838;
+        }
+
+        .btn-assess {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-assess:hover {
+            background-color: #0056b3;
+        }
+
+        .activity-content {
+            display: flex;
+            padding: 25px;
+            gap: 30px;
+        }
+
+        .activity-main {
+            flex: 1;
+        }
+
+        .activity-sidebar {
+            width: 320px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            height: fit-content;
+        }
+
+        .activity-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 10px;
+        }
+
+        .activity-meta {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 30px;
+        }
+
+        .due-date-section {
+            margin-bottom: 40px;
+        }
+
+        .due-date-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 8px;
+        }
+
+        .due-date {
+            font-size: 16px;
+            color: #dc3545;
+            font-weight: 500;
+        }
+
+        .submission-section {
+            margin-bottom: 25px;
+        }
+
+        .submission-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 15px;
+        }
+
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .student-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            border: 2px solid #dee2e6;
+        }
+
+        .student-details {
+            flex: 1;
+        }
+
+        .student-id {
+            font-size: 16px;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 2px;
+        }
+
+        .student-name {
+            font-size: 12px;
+            color: #6c757d;
+            text-transform: uppercase;
+        }
+
+        .submission-status {
+            background-color: #212529;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .attachments-section {
+            margin-bottom: 25px;
+        }
+
+        .attachments-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 12px;
+        }
+
+        .attachment-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: #17a2b8;
+            padding: 8px;
+            background-color: white;
+            border-radius: 4px;
+        }
+
+        .attachment-icon {
+            width: 16px;
+            height: 20px;
+            background-color: #6c757d;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .attachment-name {
+            flex: 1;
+        }
+
+        .attachment-size {
+            color: #6c757d;
+            font-size: 11px;
+        }
+
+        .scoring-section {
+            border-top: 1px solid #e9ecef;
+            padding-top: 25px;
+        }
+
+        .scoring-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .expected-level {
+            color: #28a745;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .expected-level::before {
+            content: "■";
+            font-size: 12px;
+        }
+
+        .total-score {
+            font-size: 16px;
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .action-links {
+            display: flex;
+            gap: 15px;
+            color: #17a2b8;
+            font-size: 14px;
+        }
+
+        .action-links a {
+            color: #17a2b8;
+            text-decoration: none;
+        }
+
+        .action-links a:hover {
+            text-decoration: underline;
+        }
+
+        .criteria-section {
+            margin-bottom: 25px;
+        }
+
+        .criteria-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 15px;
+        }
+
+        .criteria-text {
+            font-size: 14px;
+            color: #495057;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .rubric-scale {
+            display: flex;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .scale-item {
+            flex: 1;
+            text-align: center;
+            padding: 15px 8px;
+            border-right: 1px solid #e9ecef;
+            font-size: 14px;
+            font-weight: 600;
+            color: #495057;
+            transition: all 0.2s;
+        }
+
+        .scale-item:last-child {
+            border-right: none;
+        }
+
+        .scale-item.criteria-header {
+            background-color: #f1f3f4;
+            color: #495057;
+            font-weight: 600;
+        }
+
+        .scale-item.criteria-header {
+            background-color: #f1f3f4;
+            color: #495057;
+            font-weight: 600;
+        }
+
+        .scale-item.active {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .scale-labels {
+            display: flex;
+            font-size: 11px;
+            color: #6c757d;
+        }
+
+        .scale-label {
+            flex: 1;
+            text-align: center;
+            padding: 8px 5px;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                order: 2;
+            }
+            
+            .main-content {
+                order: 1;
+            }
+
+            .activity-content {
+                flex-direction: column;
+            }
+
+            .activity-sidebar {
+                width: 100%;
+            }
+
+            .assessment-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+            }
+
+            .assessment-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">DEEP-PORTFOLIO</div>
+        <div class="user-info">
+            <span>นันท์นิชา ปัถวี</span>
+            <div class="user-avatar"></div>
+            <span>🔔</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-item">
+                <span class="sidebar-icon">🏠</span>
+                <span>หน้าหลัก</span>
+            </div>
+            <div class="sidebar-item active">
+                <span class="sidebar-icon">📋</span>
+                <span>รายวิชา</span>
+            </div>
+            <div class="sidebar-item sub-menu">
+                <span class="sidebar-icon">📊</span>
+                <span>ประกาศ</span>
+            </div>
+            <div class="sidebar-item sub-menu">
+                <span class="sidebar-icon">👥</span>
+                <span>รายละเอียดรายวิชา</span>
+            </div>
+            <div class="sidebar-item sub-menu active">
+                <span class="sidebar-icon">🎯</span>
+                <span>งานในชั้นเรียน</span>
+            </div>
+            <div class="sidebar-item sub-menu">
+                <span class="sidebar-icon">📈</span>
+                <span>สื่อการเรียนการสอน</span>
+            </div>
+            <div class="sidebar-item">
+                <span class="sidebar-icon">📅</span>
+                <span>ปฏิทิน</span>
+            </div>
+            <div class="sidebar-item">
+                <span class="sidebar-icon">📁</span>
+                <span>แฟ้มผลงาน</span>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="breadcrumb">
+                <span class="course-name">USER EXPERIENCE AND USER INTERFACE DESIGN</span>
+                <span class="separator">></span>
+                <a href="#">Assessment Activity</a>
+                <span class="separator">/</span>
+                <span>UI Figma</span>
+            </div>
+
+            <div class="assessment-header">
+                <h1 class="assessment-title">กิจกรรมการประเมิน</h1>
+                <div class="assessment-buttons">
+                    <button class="btn-submit">Submit</button>
+                    <button class="btn-assess">Assess yourself / Score & feedback</button>
+                </div>
+            </div>
+
+            <div class="activity-content">
+                <div class="activity-main">
+                    <div class="activity-title">UI Figma</div>
+
+                    <div class="due-date-section">
+                        <div class="due-date-label">กำหนดส่ง</div>
+                        <div class="due-date">9 สิงหาคม 2568 เวลา 23.59</div>
+                    </div>
+
+                    <div class="scoring-section">
+                        <div class="scoring-header">
+                            <div class="expected-level">ระดับที่คาดหวัง</div>
+                            <div class="total-score">Total Score: 100</div>
+                            <div class="action-links">
+                                <a href="#">Download Rubric</a>
+                                <a href="#">Add to diary</a>
+                            </div>
+                        </div>
+
+                        <div class="criteria-section">
+                            <div class="rubric-scale">
+                                <div class="scale-item criteria-header">เกณฑ์การประเมิน</div>
+                                <div class="scale-item">20</div>
+                                <div class="scale-item">40</div>
+                                <div class="scale-item active">60</div>
+                                <div class="scale-item">80</div>
+                                <div class="scale-item">100</div>
+                            </div>
+                            
+                            <div class="scale-labels">
+                                <div class="scale-label"></div>
+                                <div class="scale-label">Novice</div>
+                                <div class="scale-label">Advanced Beginner</div>
+                                <div class="scale-label">Competent Performer</div>
+                                <div class="scale-label">Proficient Performer</div>
+                                <div class="scale-label">Expert</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="activity-sidebar">
+                    <div class="submission-section">
+                        <div class="submission-title">Submission</div>
+                        
+                        <div class="student-info">
+                            <div class="student-avatar"></div>
+                            <div class="student-details">
+                                <div class="student-id">65010677</div>
+                                <div class="student-name">นางสาว พณาภา กอไพบูลย์กิจ</div>
+                            </div>
+                        </div>
+
+                        <div class="submission-status">Submitted : September 6, 2022 At 14:17</div>
+
+                        <div class="attachments-section">
+                            <div class="attachments-title">Attachments</div>
+                            <div class="attachment-item">
+                                <div class="attachment-icon"></div>
+                                <div class="attachment-name">Description of student ID student01.pdf</div>
+                                <div class="attachment-size">14.75 KB</div>
+                            </div>
+                            <div class="attachment-item">
+                                <div class="attachment-icon"></div>
+                                <div class="attachment-name">Intro-Video.jpg</div>
+                                <div class="attachment-size">620.72 KB</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

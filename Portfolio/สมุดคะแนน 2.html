@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEEP-PORTFOLIO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #4a72d6 0%, #5b82e8 100%);
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .logo .icon {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+        }
+
+        .container {
+            display: flex;
+            min-height: calc(100vh - 60px);
+        }
+
+        .sidebar {
+            width: 240px;
+            background: white;
+            border-right: 1px solid #e0e0e0;
+            overflow-y: auto;
+        }
+
+        .back-button {
+            padding: 15px 20px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background-color: #f8f9fa;
+        }
+
+        .course-info {
+            padding: 20px;
+            background: linear-gradient(135deg, #4a72d6 0%, #5b82e8 100%);
+            color: white;
+        }
+
+        .course-code {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .course-name {
+            font-size: 12px;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .group-select {
+            background: white;
+            color: #333;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: none;
+            width: 100%;
+            font-size: 12px;
+        }
+
+        .menu {
+            padding: 0;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .menu-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .menu-item.active {
+            background-color: #e3f2fd;
+            border-right: 4px solid #4a72d6;
+            color: #4a72d6;
+            font-weight: 500;
+        }
+
+        .menu-item .icon {
+            margin-right: 12px;
+            font-size: 16px;
+            width: 20px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb a {
+            color: #4a72d6;
+            text-decoration: none;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        .content-table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .table-header {
+            background: #f8f9fd;
+            padding: 15px 20px;
+            display: grid;
+            grid-template-columns: 80px 150px 200px 120px 80px 80px 80px 80px 80px;
+            gap: 15px;
+            font-weight: 600;
+            color: #4a72d6;
+            font-size: 14px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .table-row {
+            padding: 18px 20px;
+            display: grid;
+            grid-template-columns: 80px 150px 200px 120px 80px 80px 80px 80px 80px;
+            gap: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            align-items: center;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .table-row:hover {
+            background-color: #fafbff;
+        }
+
+        .row-number {
+            text-align: center;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .bell-icon, .profile-icon {
+            width: 24px;
+            height: 24px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .profile-icon {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .toggle-container {
+            margin-right: 20px;
+        }
+
+        .toggle-wrapper {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 2px;
+            display: flex;
+            border: 1px solid #e9ecef;
+        }
+
+        .toggle-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-btn.active {
+            background: #4a72d6;
+            color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .toggle-btn:hover:not(.active) {
+            color: #4a72d6;
+            background: rgba(74, 114, 214, 0.1);
+        }
+
+        .submission-status {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .status-box {
+            width: 24px;
+            height: 20px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .status-ontime {
+            background-color: #28a745;
+        }
+
+        .status-late {
+            background-color: #ffc107;
+            color: #333;
+        }
+
+        .status-missing {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <span class="icon">🎓</span>
+            DEEP-PORTFOLIO
+        </div>
+        <div class="user-info">
+            <span>ชมพูนุท เต็งเจริญ</span>
+            <div class="bell-icon">🔔</div>
+            <div class="profile-icon">👤</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="back-button">
+                ← กลับหน้าหลัก
+            </div>
+            
+            <div class="course-info">
+                <div class="course-code">01076036</div>
+                <div class="course-name">USER EXPERIENCE AND USER INTERFACE DESIGN</div>
+                <select class="group-select">
+                    <option>กลุ่มเรียน 18</option>
+                </select>
+            </div>
+
+            <div class="menu">
+                <div class="menu-item">
+                    <span class="icon">📋</span>
+                    ประกาศ
+                </div>
+                <div class="menu-item">
+                    <span class="icon">📄</span>
+                    รายละเอียดรายวิชา
+                </div>
+                <div class="menu-item">
+                    <span class="icon">📅</span>
+                    แผนการสอน
+                </div>
+                <div class="menu-item">
+                    <span class="icon">📚</span>
+                    สื่อการสอน
+                </div>
+                <div class="menu-item">
+                    <span class="icon">⚖️</span>
+                    กิจกรรมการประเมิน
+                </div>
+                <div class="menu-item">
+                    <span class="icon">🎯</span>
+                    กิจกรรมการเรียนรู้
+                </div>
+                <div class="menu-item">
+                    <span class="icon">💭</span>
+                    วางแผนรายวิชา
+                </div>
+                <div class="menu-item active">
+                    <span class="icon">📊</span>
+                    สมุดคะแนน
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="breadcrumb">
+                <a href="#">USER EXPERIENCE AND USER INTERFACE DESIGN</a> > สมุดคะแนน
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h1 class="page-title" style="margin-bottom: 0;">สมุดคะแนน</h1>
+                <div class="toggle-container">
+                    <div class="toggle-wrapper">
+                        <button class="toggle-btn" onclick="toggleView('activity')">รายกิจกรรม</button>
+                        <button class="toggle-btn active" onclick="toggleView('person')">รายบุคคล</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-table">
+                <div class="table-header">
+                    <div>ลำดับที่</div>
+                    <div>รหัสนักศึกษา</div>
+                    <div>ชื่อนักศึกษา</div>
+                    <div>การส่งงาน</div>
+                    <div>คะแนนรวม</div>
+                    <div>User Research [10]</div>
+                    <div>UX Design [15]</div>
+                    <div>Wireframe [20]</div>
+                    <div>Project [30]</div>
+                </div>
+
+                <div class="table-row">
+                    <div class="row-number">1</div>
+                    <div>65010001</div>
+                    <div>นางสาวพรรณธิดา จันทร์แสง</div>
+                    <div class="submission-status">
+                        <div class="status-box status-ontime">4</div>
+                        <div class="status-box status-late">0</div>
+                        <div class="status-box status-missing">0</div>
+                    </div>
+                    <div>95</div>
+                    <div>25</div>
+                    <div>24</div>
+                    <div>23</div>
+                    <div>23</div>
+                </div>
+
+                <div class="table-row">
+                    <div class="row-number">2</div>
+                    <div>65010015</div>
+                    <div>นายธีรพัทธ์ สุขเจริญ</div>
+                    <div class="submission-status">
+                        <div class="status-box status-ontime">3</div>
+                        <div class="status-box status-late">1</div>
+                        <div class="status-box status-missing">0</div>
+                    </div>
+                    <div>88</div>
+                    <div>22</div>
+                    <div>21</div>
+                    <div>22</div>
+                    <div>23</div>
+                </div>
+
+                <div class="table-row">
+                    <div class="row-number">3</div>
+                    <div>65010027</div>
+                    <div>นางสาวณัฐนิชา วงศ์ทอง</div>
+                    <div class="submission-status">
+                        <div class="status-box status-ontime">4</div>
+                        <div class="status-box status-late">0</div>
+                        <div class="status-box status-missing">0</div>
+                    </div>
+                    <div>92</div>
+                    <div>24</div>
+                    <div>23</div>
+                    <div>22</div>
+                    <div>23</div>
+                </div>
+
+                <div class="table-row">
+                    <div class="row-number">4</div>
+                    <div>65010034</div>
+                    <div>นายอนุชิต ปิยะวรรณ</div>
+                    <div class="submission-status">
+                        <div class="status-box status-ontime">2</div>
+                        <div class="status-box status-late">2</div>
+                        <div class="status-box status-missing">0</div>
+                    </div>
+                    <div>78</div>
+                    <div>20</div>
+                    <div>19</div>
+                    <div>20</div>
+                    <div>19</div>
+                </div>
+
+                <div class="table-row">
+                    <div class="row-number">5</div>
+                    <div>65010048</div>
+                    <div>นางสาวสุธิดา มะลิวัลย์</div>
+                    <div class="submission-status">
+                        <div class="status-box status-ontime">4</div>
+                        <div class="status-box status-late">0</div>
+                        <div class="status-box status-missing">0</div>
+                    </div>
+                    <div>97</div>
+                    <div>25</div>
+                    <div>24</div>
+                    <div>24</div>
+                    <div>24</div>
+                </div>
+
+                <div class="table-row">
+                    <div class="row-number">6</div>
+                    <div>65010052</div>
+                    <div>นายภูริช แสงอรุณ</div>
+                    <div class="submission-status">
+                        <div class="status-box status-ontime">1</div>
+                        <div class="status-box status-late">2</div>
+                        <div class="status-box status-missing">1</div>
+                    </div>
+                    <div>65</div>
+                    <div>18</div>
+                    <div>17</div>
+                    <div>15</div>
+                    <div>15</div>
+                </div>
+
+                <div class="table-row">
+                    <div class="row-number">7</div>
+                    <div>65010063</div>
+                    <div>นางสาวชลิตา บุญยืน</div>
+                    <div class="submission-status">
+                        <div class="status-box status-ontime">3</div>
+                        <div class="status-box status-late">1</div>
+                        <div class="status-box status-missing">0</div>
+                    </div>
+                    <div>85</div>
+                    <div>21</div>
+                    <div>22</div>
+                    <div>21</div>
+                    <div>21</div>
+                </div>
+
+                <div class="table-row">
+                    <div class="row-number">8</div>
+                    <div>65010071</div>
+                    <div>นายกิตติพงษ์ รุ่งเรือง</div>
+                    <div class="submission-status">
+                        <div class="status-box status-ontime">4</div>
+                        <div class="status-box status-late">0</div>
+                        <div class="status-box status-missing">0</div>
+                    </div>
+                    <div>90</div>
+                    <div>23</div>
+                    <div>22</div>
+                    <div>22</div>
+                    <div>23</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add interactive functionality
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Back button functionality
+        document.querySelector('.back-button').addEventListener('click', function() {
+            alert('กลับหน้าหลัก');
+        });
+
+        // Toggle functionality
+        function toggleView(view) {
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (view === 'activity') {
+                document.querySelector('.toggle-btn[onclick="toggleView(\'activity\')"]').classList.add('active');
+            } else {
+                document.querySelector('.toggle-btn[onclick="toggleView(\'person\')"]').classList.add('active');
+            }
+            
+            // Here you can add logic to show different data based on the view
+            console.log('Switched to:', view === 'activity' ? 'รายกิจกรรม' : 'รายบุคคล');
+        }
+    </script>
+</body>
+</html>

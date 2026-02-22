@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            font-size: 14px;
+        }
+
+        /* Header */
+        .header {
+            background-color: #ff6b35;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .logo::before {
+            content: "🎯";
+            margin-right: 8px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #fff;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23666"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>');
+            background-size: 20px;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Layout Container */
+        .container {
+            display: flex;
+            min-height: calc(100vh - 52px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+            padding: 0;
+        }
+
+        .sidebar-item {
+            padding: 12px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .sidebar-item.active {
+            background-color: #fff2f0;
+            border-left: 3px solid #ff6b35;
+            color: #ff6b35;
+            font-weight: 500;
+        }
+
+        .sidebar-item.sub-menu {
+            padding-left: 40px;
+            font-size: 13px;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar-item.sub-menu.active {
+            background-color: #f0f0f0;
+            border-left: 3px solid #999;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .sidebar-icon {
+            width: 18px;
+            height: 18px;
+            opacity: 0.7;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        .breadcrumb {
+            padding: 25px 20px 20px 20px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .breadcrumb .course-name {
+            color: #ff6b35;
+        }
+
+        .breadcrumb .separator {
+            color: #5f6368;
+            margin: 0 8px;
+        }
+
+        .breadcrumb .current-page {
+            color: #5f6368;
+        }
+
+        .assessment-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        .assessment-table th {
+            background-color: #f1f3f4;
+            padding: 16px 20px;
+            text-align: left;
+            font-weight: 700;
+            color: #5f6368;
+            font-size: 15px;
+            border-bottom: 1px solid #e8eaed;
+        }
+
+        .assessment-table td {
+            padding: 20px;
+            border-bottom: 1px solid #e8eaed;
+            vertical-align: top;
+            background-color: white;
+        }
+
+        .assessment-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .activity-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 16px;
+            margin-top: 2px;
+        }
+
+        .group-icon {
+            background-color: #e8f0fe;
+            color: #1a73e8;
+        }
+
+        .individual-icon {
+            background-color: #fef7e0;
+            color: #f9ab00;
+        }
+
+        .activity-details h3 {
+            font-size: 16px;
+            color: #202124;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .activity-meta {
+            font-size: 12px;
+            color: #5f6368;
+            margin-bottom: 8px;
+        }
+
+        .activity-type {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .type-group {
+            background-color: #e8f0fe;
+            color: #1a73e8;
+        }
+
+        .type-individual {
+            background-color: #fef7e0;
+            color: #f9ab00;
+        }
+
+        .date-info {
+            font-size: 13px;
+            color: #5f6368;
+            line-height: 1.4;
+        }
+
+        .submission-status {
+            color: #5f6368;
+            font-size: 13px;
+        }
+
+        .action-column {
+            text-align: center;
+        }
+
+        .action-btn {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-bottom: 8px;
+            width: 200px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .action-btn:hover {
+            background-color: #1557b0;
+        }
+
+        .action-btn-outline {
+            background-color: transparent;
+            color: #1a73e8;
+            border: 1px solid #1a73e8;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 200px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .action-btn-outline:hover {
+            background-color: #1a73e8;
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                order: 2;
+            }
+            
+            .main-content {
+                order: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">DEEP-PORTFOLIO</div>
+        <div class="user-info">
+            <span>นันท์นิชา ปัถวี</span>
+            <div class="user-avatar"></div>
+            <span>🔔</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-item">
+                <span class="sidebar-icon">🏠</span>
+                <span>หน้าหลัก</span>
+            </div>
+            <div class="sidebar-item active">
+                <span class="sidebar-icon">📋</span>
+                <span>รายวิชา</span>
+            </div>
+            <div class="sidebar-item sub-menu">
+                <span class="sidebar-icon">📊</span>
+                <span>ประกาศ</span>
+            </div>
+            <div class="sidebar-item sub-menu">
+                <span class="sidebar-icon">👥</span>
+                <span>รายละเอียดรายวิชา</span>
+            </div>
+            <div class="sidebar-item sub-menu active">
+                <span class="sidebar-icon">🎯</span>
+                <span>งานในชั้นเรียน</span>
+            </div>
+            <div class="sidebar-item sub-menu">
+                <span class="sidebar-icon">📈</span>
+                <span>สื่อการเรียนการสอน</span>
+            </div>
+            <div class="sidebar-item">
+                <span class="sidebar-icon">📅</span>
+                <span>ปฏิทิน</span>
+            </div>
+            <div class="sidebar-item">
+                <span class="sidebar-icon">📁</span>
+                <span>แฟ้มผลงาน</span>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="breadcrumb">
+                <span class="course-name">USER EXPERIENCE AND USER INTERFACE DESIGN</span>
+                <span class="separator">›</span>
+                <span class="current-page">งานในชั้นเรียน</span>
+            </div>
+            
+            <table class="assessment-table">
+                <thead>
+                    <tr>
+                        <th>กิจกรรมการประเมิน</th>
+                        <th>วันเริ่ม</th>
+                        <th>วันสุดท้าย</th>
+                        <th>การส่งงาน</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="activity-info">
+                                <div class="activity-icon group-icon">👥</div>
+                                <div class="activity-details">
+                                    <h3>User / Context / Content</h3>
+                                    <div class="activity-meta">1 สิงหาคม 2565</div>
+                                    <span class="activity-type type-group">Group</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="date-info">1 กุมภาพันธ์ 2565<br>เวลา 12:00</div>
+                        </td>
+                        <td>
+                            <div class="date-info">28 กุมภาพันธ์ 2565<br>เวลา 16:59</div>
+                        </td>
+                        <td>
+                            <div class="submission-status">ยังไม่ส่ง</div>
+                        </td>
+                        <td class="action-column">
+                            <button class="action-btn">Create Group</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="activity-info">
+                                <div class="activity-icon individual-icon">👤</div>
+                                <div class="activity-details">
+                                    <h3>UI Figma</h3>
+                                    <div class="activity-meta">1 สิงหาคม 2565</div>
+                                    <span class="activity-type type-individual">Individual</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="date-info">1 กุมภาพันธ์ 2565<br>เวลา 12:00</div>
+                        </td>
+                        <td>
+                            <div class="date-info">15 กุมภาพันธ์ 2565<br>เวลา 12:00</div>
+                        </td>
+                        <td>
+                            <div class="submission-status">ยังไม่ส่ง</div>
+                        </td>
+                        <td class="action-column">
+                            <button class="action-btn">Submit</button>
+                            <div><button class="action-btn-outline">Assess yourself / Score & feedback</button></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
